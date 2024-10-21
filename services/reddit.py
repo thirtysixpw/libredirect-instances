@@ -1,46 +1,21 @@
-from .utils import fetchJsonList
+from .base import InstanceFetcher
 
 
-def libreddit(mightyList):
-    fetchJsonList(
-        'libreddit',
-        'https://github.com/libreddit/libreddit-instances/raw/master/instances.json',
-        {
-            'clearnet': 'url',
-            'tor': 'onion',
-            'i2p': 'i2p',
-            'loki': None
-        },
-        True,
-        mightyList
-    )
+class Libreddit(InstanceFetcher):
+    frontend = "libreddit"
+    url = "https://github.com/libreddit/libreddit-instances/raw/master/instances.json"
+    network_mapping = {"clearnet": "url", "tor": "onion", "i2p": "i2p"}
+    keys = ["instances"]
 
 
-def redlib(mightyList):
-    fetchJsonList(
-        'redlib',
-        'https://github.com/redlib-org/redlib-instances/raw/main/instances.json',
-        {
-            'clearnet': 'url',
-            'tor': 'onion',
-            'i2p': 'i2p',
-            'loki': None
-        },
-        True,
-        mightyList
-    )
+class Redlib(InstanceFetcher):
+    frontend = "redlib"
+    url = "https://github.com/redlib-org/redlib-instances/raw/main/instances.json"
+    network_mapping = {"clearnet": "url", "tor": "onion", "i2p": "i2p"}
+    keys = ["instances"]
 
 
-def teddit(mightyList):
-    fetchJsonList(
-        'teddit',
-        'https://codeberg.org/teddit/teddit/raw/branch/main/instances.json',
-        {
-            'clearnet': 'url',
-            'tor': 'onion',
-            'i2p': 'i2p',
-            'loki': None
-        },
-        False,
-        mightyList
-    )
+class Teddit(InstanceFetcher):
+    frontend = "teddit"
+    url = "https://codeberg.org/teddit/teddit/raw/branch/main/instances.json"
+    network_mapping = {"clearnet": "url", "tor": "onion", "i2p": "i2p"}

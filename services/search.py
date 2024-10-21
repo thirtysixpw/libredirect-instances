@@ -1,71 +1,80 @@
-import requests
-from colorama import Fore, Style
-import json
+import logging
 import re
-from .utils import torRegex, i2pRegex, fetchRegexList, fetchJsonList
+import traceback
+from typing import Any
+
+import requests
 import yaml
+from colorama import Fore, Style
+
+from .base import I2P_REGEX, TIMEOUT, TOR_REGEX, InstanceFetcher
+from .utils import fetch_cache
 
 
-def searxng(mightyList):
-    r = requests.get(
-        'https://searx.space/data/instances.json')
-    rJson = json.loads(r.text)
-    searxngList = {}
-    searxngList['clearnet'] = []
-    searxngList['tor'] = []
-    searxngList['i2p'] = []
-    searxngList['loki'] = []
+class SearXNG(InstanceFetcher):
+    frontend = "searxng"
+    url = "https://searx.space/data/instances.json"
 
-    for item in rJson['instances']:
-        if re.search(torRegex, item[:-1]) and rJson['instances'][item].get('generator') == 'searxng':
-            searxngList['tor'].append(item[:-1])
-        elif re.search(i2pRegex, item[:-1]) and rJson['instances'][item].get('generator') == 'searxng':
-            searxngList['i2p'].append(item[:-1])
-        elif rJson['instances'][item].get('generator') == 'searxng':
-            searxngList['clearnet'].append(item[:-1])
+    @classmethod
+    def fetch(cls) -> dict[str, Any]:
+        instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
+        try:
+            raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
 
-    mightyList['searxng'] = searxngList
-    print(Fore.GREEN + 'Fetched ' + Style.RESET_ALL + 'SearXNG')
+            for item in raw_data["instances"]:
+                if (
+                    re.search(TOR_REGEX, item[:-1])
+                    and raw_data["instances"][item].get("generator") == "searxng"
+                ):
+                    instances["tor"].append(item[:-1])
+                elif (
+                    re.search(I2P_REGEX, item[:-1])
+                    and raw_data["instances"][item].get("generator") == "searxng"
+                ):
+                    instances["i2p"].append(item[:-1])
+                elif raw_data["instances"][item].get("generator") == "searxng":
+                    instances["clearnet"].append(item[:-1])
 
-
-def searx(mightyList):
-    searxList = {}
-    searxList['clearnet'] = []
-    searxList['tor'] = []
-    searxList['i2p'] = []
-    searxList['loki'] = []
-    r = requests.get(
-        'https://raw.githubusercontent.com/searx/searx-instances/master/searxinstances/instances.yml')
-    data = yaml.safe_load(r.text)
-    for key in data:
-        searxList['clearnet'].append(key)
-        if 'additional_urls' in data[key]:
-            for additional_url in data[key]['additional_urls']:
-                if data[key]['additional_urls'][additional_url] == "Hidden Service":
-                    searxList['tor'].append(additional_url)
-    mightyList['searx'] = searxList
-    print(Fore.GREEN + 'Fetched ' + Style.RESET_ALL + 'SearXNG')
+            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
+        except Exception:
+            fetch_cache(cls.frontend, instances)
+            logging.error(traceback.format_exc())
+        return instances
 
 
-def whoogle(mightyList):
-    fetchRegexList(
-        'whoogle',
-        'https://raw.githubusercontent.com/benbusby/whoogle-search/main/README.md',
-        r"\| \[https?:\/{2}(?:[^\s\/]+\.)*(?:[^\s\/]+\.)+[a-zA-Z0-9]+\]\((https?:\/{2}(?:[^\s\/]+\.)*(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/?\) \| ",
-        mightyList
-    )
+class Searx(InstanceFetcher):
+    frontend = "searx"
+    url = "https://raw.githubusercontent.com/searx/searx-instances/master/searxinstances/instances.yml"
+
+    @classmethod
+    def fetch(cls) -> dict[str, Any]:
+        instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
+        try:
+            raw_data = requests.get(cls.url, timeout=TIMEOUT).text
+            data = yaml.safe_load(raw_data)
+
+            for key in data:
+                instances["clearnet"].append(key)
+                if "additional_urls" in data[key]:
+                    for additional_url in data[key]["additional_urls"]:
+                        if data[key]["additional_urls"][additional_url] == "Hidden Service":
+                            instances["tor"].append(additional_url)
+
+            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
+        except Exception:
+            fetch_cache(cls.frontend, instances)
+            logging.error(traceback.format_exc())
+        return instances
 
 
-def librex(mightyList):
-    fetchJsonList(
-        'librex',
-        'https://raw.githubusercontent.com/hnhx/librex/main/instances.json',
-        {
-            'clearnet': 'clearnet',
-            'tor': 'tor',
-            'i2p': 'i2p',
-            'loki': None
-        },
-        True,
-        mightyList
-    )
+class Whoogle(InstanceFetcher):
+    frontend = "whoogle"
+    url = "https://raw.githubusercontent.com/benbusby/whoogle-search/main/README.md"
+    regex = r"\| \[https?:\/{2}(?:[^\s\/]+\.)*(?:[^\s\/]+\.)+[a-zA-Z0-9]+\]\((https?:\/{2}(?:[^\s\/]+\.)*(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/?\) \| "
+
+
+class LibreX(InstanceFetcher):
+    frontend = "librex"
+    url = "https://raw.githubusercontent.com/hnhx/librex/main/instances.json"
+    network_mapping = {"clearnet": "clearnet", "tor": "tor", "i2p": "i2p"}
+    keys = ["instances"]

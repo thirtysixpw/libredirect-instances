@@ -1,33 +1,38 @@
+import json
+import logging
+import traceback
+from typing import Any
+
 import requests
 from colorama import Fore, Style
-import json
 
-wolfreeAlpha_url_list = [
-    "https://gqq.gitlab.io",
-    "https://jqq.gitlab.io",
-    "https://rqq.gitlab.io",
-    "https://sqq.gitlab.io",
-    "https://uqq.gitlab.io"
-]
+from .base import TIMEOUT, InstanceFetcher
 
 
-def wolfreeAlpha(mightyList):
-    global wolfreeAlpha_url_list_i
-    frontend = 'wolfreeAlpha'
-    for instance in wolfreeAlpha_url_list:
-        try: 
-            r = requests.get(instance+"/instances.json")
-            if r.status_code != 200:
-                continue
-            else:
-                rJson = json.loads(r.text)
-                networks = rJson['wolfree']
-                _list = {}
-                for i in networks.keys():
-                    _list[i] = networks[i]
-                mightyList[frontend] = _list
-                print(Fore.GREEN + 'Fetched ' + Style.RESET_ALL + frontend)
-                break
-        except:
-            wolfreeAlpha_url_list_i += 1
-            wolfreeAlpha(wolfreeAlpha_url_list_i)
+class WolfreeAlpha(InstanceFetcher):
+    frontend = "wolfreeAlpha"
+
+    @classmethod
+    def fetch(cls) -> dict[str, Any]:
+        wolfree_instances = [
+            "https://gqq.gitlab.io",
+            "https://jqq.gitlab.io",
+            "https://rqq.gitlab.io",
+            "https://sqq.gitlab.io",
+            "https://uqq.gitlab.io",
+        ]
+        for instance in wolfree_instances:
+            try:
+                r = requests.get(instance + "/instances.json", timeout=TIMEOUT)
+                if r.status_code != 200:
+                    continue
+                raw_data = json.loads(r.text)
+                networks = raw_data["wolfree"]
+                instances = {}
+                for i in networks:
+                    instances[i] = networks[i]
+                print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
+                return instances
+            except Exception:
+                logging.error(traceback.format_exc())
+        return {"clearnet": wolfree_instances}

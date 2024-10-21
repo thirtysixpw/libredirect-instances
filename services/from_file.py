@@ -1,29 +1,36 @@
-from .utils import fetchFromFile
+from .base import InstanceFetcher
 
 
-def osm(mightyList):
-    fetchFromFile('osm', mightyList)
+class OSM(InstanceFetcher):
+    frontend = "osm"
+    is_fixed = True
 
 
-def neuters(mightyList):
-    fetchFromFile('neuters', mightyList)
+class Neuters(InstanceFetcher):
+    frontend = "neuters"
+    is_fixed = True
 
 
-def wikiless(mightyList):
-    fetchFromFile('wikiless', mightyList)
+class Wikiless(InstanceFetcher):
+    frontend = "wikiless"
+    is_fixed = True
 
 
-def mikuInvidious(mightyList):
-    fetchFromFile('mikuInvidious', mightyList)
+class MikuInvidious(InstanceFetcher):
+    frontend = "mikuInvidious"
+    is_fixed = True
 
 
-def twineo(mightyList):
-    fetchFromFile('twineo', mightyList)
+class Twineo(InstanceFetcher):
+    frontend = "twineo"
+    is_fixed = True
 
 
-def cloudtube(mightyList):
-    fetchFromFile('cloudtube', mightyList)
+class CloudTube(InstanceFetcher):
+    frontend = "cloudtube"
+    is_fixed = True
 
 
-def simplytranslate(mightyList):
-    fetchFromFile('simplyTranslate', mightyList)
+class SimplyTranslate(InstanceFetcher):
+    frontend = "simplyTranslate"
+    is_fixed = True

@@ -1,19 +1,12 @@
-from .utils import fetchJsonList, fetchRegexList
+from .base import InstanceFetcher
 
 
-def scribe(mightyList):
-    fetchJsonList(
-        'scribe', 'https://git.sr.ht/~edwardloveall/scribe/blob/main/docs/instances.json',
-        None,
-        False,
-        mightyList
-    )
+class Scribe(InstanceFetcher):
+    frontend = "scribe"
+    url = "https://git.sr.ht/~edwardloveall/scribe/blob/main/docs/instances.json"
 
 
-def libMedium(mightyList):
-    fetchRegexList(
-        'libMedium',
-        'https://raw.githubusercontent.com/realaravinth/libmedium/master/README.md',
-        r"\| (https?:\/{2}(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/? +\|",
-        mightyList
-    )
+class LibMedium(InstanceFetcher):
+    frontend = "libMedium"
+    url = "https://raw.githubusercontent.com/realaravinth/libmedium/master/README.md"
+    regex = r"\| (https?:\/{2}(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/? +\|"

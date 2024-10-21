@@ -1,120 +1,105 @@
-from .utils import fetchRegexList, fetchCache, fetchJsonList
-import requests
-import json
-from colorama import Fore, Style
 import logging
-import traceback
 import re
+import traceback
+from typing import Any
+
+import requests
+from colorama import Fore, Style
+
+from .base import TIMEOUT, InstanceFetcher
+from .utils import fetch_cache
 
 
-def invidious(mightyList):
-    name = 'Invidious'
-    frontend = 'invidious'
-    url = 'https://api.invidious.io/instances.json'
-    try:
-        _list = {}
-        _list['clearnet'] = []
-        _list['tor'] = []
-        _list['i2p'] = []
-        _list['loki'] = []
-        r = requests.get(url)
-        rJson = json.loads(r.text)
-        for instance in rJson:
-            if instance[1]['type'] == 'https':
-                _list['clearnet'].append(instance[1]['uri'])
-            elif instance[1]['type'] == 'onion':
-                _list['tor'].append(instance[1]['uri'])
-            elif instance[1]['type'] == 'i2p':
-                _list['i2p'].append(instance[1]['uri'])
-        mightyList[frontend] = _list
-        print(Fore.GREEN + 'Fetched ' + Style.RESET_ALL + name)
-    except Exception:
-        fetchCache(frontend, mightyList)
-        logging.error(traceback.format_exc())
+class Invidious(InstanceFetcher):
+    frontend = "invidious"
+    url = "https://api.invidious.io/instances.json"
+
+    @classmethod
+    def fetch(cls) -> dict[str, Any]:
+        instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
+        try:
+            raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
+            for instance in raw_data:
+                if instance[1]["type"] == "https":
+                    instances["clearnet"].append(instance[1]["uri"])
+                elif instance[1]["type"] == "onion":
+                    instances["tor"].append(instance[1]["uri"])
+                elif instance[1]["type"] == "i2p":
+                    instances["i2p"].append(instance[1]["uri"])
+            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
+            return instances
+        except Exception:
+            fetch_cache(cls.frontend, instances)
+            logging.error(traceback.format_exc())
+        return instances
 
 
-def piped(mightyList):
-    frontend = 'piped'
-    try:
-        _list = {}
-        _list['clearnet'] = []
-        _list['tor'] = []
-        _list['i2p'] = []
-        _list['loki'] = []
-        r = requests.get(
-            'https://raw.githubusercontent.com/wiki/TeamPiped/Piped/Instances.md')
+class Piped(InstanceFetcher):
+    frontend = "piped"
+    url = "https://raw.githubusercontent.com/wiki/TeamPiped/Piped/Instances.md"
 
-        tmp = re.findall(
-            r' \| (https:\/{2}(?:[^\s\/]+\.)+[a-zA-Z]+) \| ', r.text)
-        for item in tmp:
-            try:
-                print(
-                    Fore.GREEN + 'Fetching ' + Style.RESET_ALL + item,
-                    end=' '
-                )
-                url = requests.get(item, timeout=5).url
-                if url.strip("/") == item:
-                    print(Fore.RED + '𐄂')
+    @classmethod
+    def fetch(cls) -> dict[str, Any]:
+        instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
+        try:
+            raw_data = requests.get(cls.url, timeout=TIMEOUT).text
+
+            tmp = re.findall(r" \| (https:\/{2}(?:[^\s\/]+\.)+[a-zA-Z]+) \| ", raw_data)
+            for item in tmp:
+                try:
+                    print(Fore.GREEN + "Fetching " + Style.RESET_ALL + item, end=" ")
+                    url = requests.get(item, timeout=5).url
+                    if url.strip("/") == item:
+                        print(Fore.RED + "𐄂")
+                        continue
+                    print(Fore.GREEN + "✓")
+                    instances["clearnet"].append(url)
+                except Exception:
+                    print(Fore.RED + "𐄂")
                     continue
-                else:
-                    print(Fore.GREEN + '✓')
-                    _list['clearnet'].append(url)
-            except Exception:
-                print(Fore.RED + '𐄂')
-                continue
-        mightyList[frontend] = _list
-        _list['clearnet'].remove("https://piped.video")
-        print(Fore.GREEN + 'Fetched ' + Style.RESET_ALL + frontend)
-    except Exception:
-        fetchCache(frontend, mightyList)
-        logging.error(traceback.format_exc())
+            instances["clearnet"].remove("https://piped.video")
+            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
+        except Exception:
+            fetch_cache(cls.frontend, instances)
+            logging.error(traceback.format_exc())
+        return instances
 
 
-def materialious(mightyList):
-    fetchRegexList(
-        'materialious',
-        'https://raw.githubusercontent.com/Materialious/Materialious/main/docs/INSTANCES.md',
-        r"- \[.*\]\((https?:\/{2}(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/?\)",
-        mightyList
-    )
+class Materialious(InstanceFetcher):
+    frontend = "materialious"
+    url = "https://raw.githubusercontent.com/Materialious/Materialious/main/docs/INSTANCES.md"
+    regex = r"- \[.*\]\((https?:\/{2}(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/?\)"
 
 
-def pipedMaterial(mightyList):
-    fetchRegexList(
-        'pipedMaterial',
-        'https://raw.githubusercontent.com/mmjee/Piped-Material/master/README.md',
-        r"\| (https?:\/{2}(?:\S+\.)+[a-zA-Z0-9]*) +\| Production",
-        mightyList
-    )
+class PipedMaterial(InstanceFetcher):
+    frontend = "pipedMaterial"
+    url = "https://raw.githubusercontent.com/mmjee/Piped-Material/master/README.md"
+    regex = r"\| (https?:\/{2}(?:\S+\.)+[a-zA-Z0-9]*) +\| Production"
 
 
-def poketube(mightyList):
-    frontend = 'poketube'
-    try:
-        r = requests.get(
-            'https://codeberg.org/Ashley/poketube/raw/branch/main/instances.json')
-        rJson = json.loads(r.text)
-        _list = {
-            'clearnet': [],
-            'tor': [],
-            'i2p': [],
-            'loki': []
+class Poketube(InstanceFetcher):
+    frontend = "poketube"
 
-        }
-        for element in rJson:
-            _list['clearnet'].append(element[1]['uri'])
+    @classmethod
+    def fetch(cls) -> dict[str, Any]:
+        instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
+        try:
+            raw_data = requests.get(
+                "https://codeberg.org/Ashley/poketube/raw/branch/main/instances.json",
+                timeout=TIMEOUT,
+            ).json()
+            for element in raw_data:
+                instances["clearnet"].append(element[1]["uri"])
 
-        mightyList[frontend] = _list
-        print(Fore.GREEN + 'Fetched ' + Style.RESET_ALL + frontend)
-    except Exception:
-        fetchCache(frontend, mightyList)
-        logging.error(traceback.format_exc())
+            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
+            return instances
+        except Exception:
+            fetch_cache(cls.frontend, instances)
+            logging.error(traceback.format_exc())
+        return instances
 
 
-def hyperpipe(mightyList):
-    fetchJsonList(
-        'hyperpipe',
-        'https://codeberg.org/Hyperpipe/pages/raw/branch/main/api/frontend.json',
-        'url',
-        False,
-        mightyList)
+class Hyperpipe(InstanceFetcher):
+    frontend = "hyperpipe"
+    url = "https://codeberg.org/Hyperpipe/pages/raw/branch/main/api/frontend.json"
+    network_mapping = {"clearnet": "url"}

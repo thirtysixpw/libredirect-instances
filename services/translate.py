@@ -1,29 +1,18 @@
-from .utils import fetchJsonList, fetchRegexList
+from .base import InstanceFetcher
 
 
-def linvgatranslate(mightyList):
-    fetchJsonList(
-        'lingva',
-        'https://raw.githubusercontent.com/TheDavidDelta/lingva-translate/main/instances.json',
-        None,
-        False,
-        mightyList
-    )
+class LinvgaTranslate(InstanceFetcher):
+    frontend = "lingva"
+    url = "https://raw.githubusercontent.com/TheDavidDelta/lingva-translate/main/instances.json"
 
 
-def libreTranslate(mightyList):
-    fetchRegexList(
-        'libreTranslate',
-        'https://raw.githubusercontent.com/LibreTranslate/LibreTranslate/main/README.md',
-        r"\[(?:[^\s\/]+\.)+[a-zA-Z0-9]+\]\((https?:\/{2}(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/?\)\|",
-        mightyList
-    )
+class LibreTranslate(InstanceFetcher):
+    frontend = "libreTranslate"
+    url = "https://raw.githubusercontent.com/LibreTranslate/LibreTranslate/main/README.md"
+    regex = r"\[(?:[^\s\/]+\.)+[a-zA-Z0-9]+\]\((https?:\/\/(?:[^\s\/]+\.)+[a-zA-Z0-9]+)\/?\)"
 
-def mozhi(mightyList):
-        fetchJsonList(
-        'mozhi',
-        'https://codeberg.org/aryak/mozhi/raw/branch/master/instances.json',
-        'link',
-        False,
-        mightyList
-    )
+
+class Mozhi(InstanceFetcher):
+    frontend = "mozhi"
+    url = "https://codeberg.org/aryak/mozhi/raw/branch/master/instances.json"
+    network_mapping = {"clearnet": "link", "tor": "onion", "i2p": "i2p"}
