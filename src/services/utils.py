@@ -1,13 +1,12 @@
 import json
 import socket
-from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
 import requests
 from colorama import Fore, Style
 
-from .base import TIMEOUT
+from ..constants import DATA_FILE, TIMEOUT
 
 
 def get_cloudflare_ips() -> list[str]:
@@ -100,7 +99,7 @@ def idna_encode(instances: dict[str, Any]) -> dict[str, Any]:
 
 def fetch_cache(frontend: str, instances: dict[str, Any]) -> None:
     try:
-        instances[frontend] = json.loads(Path("data.json").read_text())[frontend]
+        instances[frontend] = json.loads(DATA_FILE.read_text())[frontend]
         print(Fore.YELLOW + "Failed" + Style.RESET_ALL + " to fetch " + frontend)
     except Exception:
         print(Fore.RED + "Failed" + Style.RESET_ALL + " to get cached " + frontend)

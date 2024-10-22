@@ -6,7 +6,8 @@ from typing import Any
 import requests
 from colorama import Fore, Style
 
-from .base import TIMEOUT, InstanceFetcher
+from ..constants import TIMEOUT
+from .base import InstanceFetcher
 
 
 class WolfreeAlpha(InstanceFetcher):

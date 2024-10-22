@@ -7,7 +7,8 @@ import requests
 import yaml
 from colorama import Fore, Style
 
-from .base import I2P_REGEX, TIMEOUT, TOR_REGEX, InstanceFetcher
+from ..constants import I2P_REGEX, TIMEOUT, TOR_REGEX
+from .base import InstanceFetcher
 from .utils import fetch_cache
 
 

@@ -1,20 +1,12 @@
 import json
 import re
 from pathlib import Path
-from typing import Any, Final
+from typing import Any
 
 import requests
 from colorama import Fore, Style
 
-URL_START_REGEX = r"https?:\/{2}(?:[^\s\/]+\.)*"
-URL_END_REGEX = "(?:\\/[^\\s\\/]+)*\\/?"
-TOR_REGEX = URL_START_REGEX + "onion" + URL_END_REGEX
-I2P_REGEX = URL_START_REGEX + "i2p" + URL_END_REGEX
-LOKI_REGEX = URL_START_REGEX + "loki" + URL_END_REGEX
-AUTH_REGEX = r"https?:\/{2}\S+:\S+@(?:[^\s\/]+\.)*[a-zA-Z0-9]+" + URL_END_REGEX
-
-TIMEOUT: Final[int] = 5
-NETWORKS: Final[tuple[str, ...]] = tuple(json.loads(Path("networks.json").read_text()).keys())
+from ..constants import DATA_FILE, I2P_REGEX, LOKI_REGEX, NETWORKS, TIMEOUT, TOR_REGEX
 
 
 class InstanceFetcher:
@@ -72,10 +64,14 @@ class InstanceFetcher:
                         cls._parse_instance_url(instances, item)
             print(f"{Fore.GREEN}Fetched{Style.RESET_ALL} {cls.frontend}")
             return instances
-        except (requests.exceptions.Timeout, requests.exceptions.JSONDecodeError, requests.exceptions.ConnectionError):
+        except (
+            requests.exceptions.Timeout,
+            requests.exceptions.JSONDecodeError,
+            requests.exceptions.ConnectionError,
+        ):
             print(f"{Fore.YELLOW}Failed{Style.RESET_ALL} to fetch {cls.frontend}")
             try:
-                instances = json.loads(Path("data.json").read_text())[cls.frontend]
+                instances = json.loads(DATA_FILE.read_text())[cls.frontend]
                 print(f"{Fore.GREEN}Loaded{Style.RESET_ALL} cached {cls.frontend}")
                 return instances
             except (UnicodeDecodeError, KeyError):
