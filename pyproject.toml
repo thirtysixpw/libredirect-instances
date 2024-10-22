@@ -1,0 +1,89 @@
+[project]
+name = "libredirect-instances"
+version = "0.1.0"
+description = "LibRedirect alternative frontends instances fetcher."
+license = "GPL-3.0-or-later"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "LibRedirect Developers", email = "libredirect@protonmail.com" },
+    { name = "ManeraKai", email = "manerakai@protonmail.com" },
+    { name = "Zubarev Grigoriy", email = "thirtysix@thirtysix.pw" },
+]
+dependencies = [
+    "requests>=2.32.3",
+    "colorama>=0.4.6",
+    "pandas>=2.2.3",
+    "pyyaml>=6.0.2",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.7.0",
+    "basedpyright>=1.19.0",
+    "pandas-stubs>=2.2.3.241009",
+    "types-colorama>=0.4.15.20240311",
+    "types-pyyaml>=6.0.12.20240917",
+    "types-requests>=2.32.0.20241016",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 99
+exclude = [
+    ".git",
+    ".venv",
+    ".idea",
+    ".vscode",
+    ".cache",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "N", # pep8-naming
+    "S", # flake8-bandit
+    "B", # flake8-bugbear
+    "G", # flake8-logging-format
+    "A", # flake8-builtins
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "EM", # flake8-errmsg
+    "PLC", # pylint conventions
+    "PLE", # pylint errors
+    "SIM", # flake8-simplify
+    "RET", # flake8-return
+    "YTT", # flake8-2020
+    "DTZ", # flake8-datetimez
+    "RUF", # ruff
+    "TCH", # flake8-type-checking
+    "PTH", # flake8-use-pathlib
+    "PIE", # flake8-pie
+    "ASYNC", # flake8-async
+]
+ignore = [
+    "RUF012", # Mutable class attributes should be annotated with typing.ClassVar
+    "E501", # Line too long, handled by ruff formatter
+]
+
+[tool.basedpyright]
+exclude = [
+    ".git",
+    ".venv",
+    ".idea",
+    ".vscode",
+    ".cache",
+    "build",
+    "dist",
+]
+typeCheckingMode = "standard"
+pythonPlatform = "All"
+pythonVersion = "3.12"
+reportMissingImports = true
+reportMissingTypeStubs = true
+reportMissingParameterType = true
