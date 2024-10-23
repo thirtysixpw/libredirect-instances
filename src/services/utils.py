@@ -1,4 +1,3 @@
-import json
 import socket
 from typing import Any
 from urllib.parse import urlparse
@@ -6,7 +5,7 @@ from urllib.parse import urlparse
 import requests
 from colorama import Fore, Style
 
-from ..constants import DATA_FILE, TIMEOUT
+from ..constants import TIMEOUT
 
 
 def get_cloudflare_ips() -> list[str]:
@@ -95,14 +94,6 @@ def idna_encode(instances: dict[str, Any]) -> dict[str, Any]:
                 except Exception:
                     res[frontend][network].append(url)
     return res
-
-
-def fetch_cache(frontend: str, instances: dict[str, Any]) -> None:
-    try:
-        instances[frontend] = json.loads(DATA_FILE.read_text())[frontend]
-        print(Fore.YELLOW + "Failed" + Style.RESET_ALL + " to fetch " + frontend)
-    except Exception:
-        print(Fore.RED + "Failed" + Style.RESET_ALL + " to get cached " + frontend)
 
 
 def is_valid_url(url: str):  # by avanitrachhadiya2155

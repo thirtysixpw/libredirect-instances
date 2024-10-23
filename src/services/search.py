@@ -1,15 +1,11 @@
-import logging
 import re
-import traceback
 from typing import Any
 
 import requests
 import yaml
-from colorama import Fore, Style
 
 from ..constants import I2P_REGEX, TIMEOUT, TOR_REGEX
 from .base import InstanceFetcher
-from .utils import fetch_cache
 
 
 class SearXNG(InstanceFetcher):
@@ -19,27 +15,20 @@ class SearXNG(InstanceFetcher):
     @classmethod
     def fetch(cls) -> dict[str, Any]:
         instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
-        try:
-            raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
-
-            for item in raw_data["instances"]:
-                if (
-                    re.search(TOR_REGEX, item[:-1])
-                    and raw_data["instances"][item].get("generator") == "searxng"
-                ):
-                    instances["tor"].append(item[:-1])
-                elif (
-                    re.search(I2P_REGEX, item[:-1])
-                    and raw_data["instances"][item].get("generator") == "searxng"
-                ):
-                    instances["i2p"].append(item[:-1])
-                elif raw_data["instances"][item].get("generator") == "searxng":
-                    instances["clearnet"].append(item[:-1])
-
-            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
-        except Exception:
-            fetch_cache(cls.frontend, instances)
-            logging.error(traceback.format_exc())
+        raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
+        for item in raw_data["instances"]:
+            if (
+                re.search(TOR_REGEX, item[:-1])
+                and raw_data["instances"][item].get("generator") == "searxng"
+            ):
+                instances["tor"].append(item[:-1])
+            elif (
+                re.search(I2P_REGEX, item[:-1])
+                and raw_data["instances"][item].get("generator") == "searxng"
+            ):
+                instances["i2p"].append(item[:-1])
+            elif raw_data["instances"][item].get("generator") == "searxng":
+                instances["clearnet"].append(item[:-1])
         return instances
 
 
@@ -50,21 +39,14 @@ class Searx(InstanceFetcher):
     @classmethod
     def fetch(cls) -> dict[str, Any]:
         instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
-        try:
-            raw_data = requests.get(cls.url, timeout=TIMEOUT).text
-            data = yaml.safe_load(raw_data)
-
-            for key in data:
-                instances["clearnet"].append(key)
-                if "additional_urls" in data[key]:
-                    for additional_url in data[key]["additional_urls"]:
-                        if data[key]["additional_urls"][additional_url] == "Hidden Service":
-                            instances["tor"].append(additional_url)
-
-            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
-        except Exception:
-            fetch_cache(cls.frontend, instances)
-            logging.error(traceback.format_exc())
+        raw_data = requests.get(cls.url, timeout=TIMEOUT).text
+        data = yaml.safe_load(raw_data)
+        for key in data:
+            instances["clearnet"].append(key)
+            if "additional_urls" in data[key]:
+                for additional_url in data[key]["additional_urls"]:
+                    if data[key]["additional_urls"][additional_url] == "Hidden Service":
+                        instances["tor"].append(additional_url)
         return instances
 
 

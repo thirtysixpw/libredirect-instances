@@ -1,14 +1,10 @@
-import logging
 import re
-import traceback
 from typing import Any
 
 import requests
-from colorama import Fore, Style
 
 from ..constants import TIMEOUT
 from .base import InstanceFetcher
-from .utils import fetch_cache
 
 
 class Tent(InstanceFetcher):
@@ -84,18 +80,11 @@ class Rimgo(InstanceFetcher):
     @classmethod
     def fetch(cls) -> dict[str, Any]:
         instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
-        try:
-            raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
-            for instance in raw_data["clearnet"]:
-                instances["clearnet"].append(instance["url"])
-
-            for instance in raw_data["tor"]:
-                instances["tor"].append(instance["url"])
-
-            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
-        except Exception:
-            fetch_cache(cls.frontend, instances)
-            logging.error(traceback.format_exc())
+        raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
+        for instance in raw_data["clearnet"]:
+            instances["clearnet"].append(instance["url"])
+        for instance in raw_data["tor"]:
+            instances["tor"].append(instance["url"])
         return instances
 
 
@@ -114,23 +103,15 @@ class Rimgo(InstanceFetcher):
 class AnonymousOverflow(InstanceFetcher):
     frontend = "anonymousOverflow"
     url = "https://raw.githubusercontent.com/httpjamesm/AnonymousOverflow/main/instances.json"
+    network_mapping = {"clearnet": "clearnet", "onion": "tor", "i2p": "i2p", "loki": "loki"}
 
     @classmethod
     def fetch(cls) -> dict[str, Any]:
         instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
-        try:
-            raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
-            for net_type, x_instances in raw_data.items():
-                x_res = [x["url"].strip("/") for x in x_instances]
-                instances[
-                    {"clearnet": "clearnet", "onion": "tor", "i2p": "i2p", "loki": "loki"}[
-                        net_type
-                    ]
-                ] = x_res
-            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
-        except Exception:
-            fetch_cache(cls.frontend, instances)
-            logging.error(traceback.format_exc())
+        raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
+        for net_type, x_instances in raw_data.items():
+            x_res = [x["url"].strip("/") for x in x_instances]
+            instances[cls.network_mapping[net_type]] = x_res  # pyright: ignore[reportOptionalSubscript]
         return instances
 
 
@@ -161,41 +142,36 @@ class Nitter(InstanceFetcher):
     @classmethod
     def fetch(cls) -> dict[str, Any]:
         instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
-        try:
-            raw_data = requests.get(cls.url, timeout=TIMEOUT).text
+        raw_data = requests.get(cls.url, timeout=TIMEOUT).text
 
-            public = re.findall(r"## Public((?:\n|.*)+?)##", raw_data)
-            if public:
-                for line in public[0].split("\n"):
-                    result = re.findall(r"^\| \[.*?\]\((https.*?)\)", line)
-                    if len(result) > 0:
-                        instances["clearnet"].append(result[0])
+        public = re.findall(r"## Public((?:\n|.*)+?)##", raw_data)
+        if public:
+            for line in public[0].split("\n"):
+                result = re.findall(r"^\| \[.*?\]\((https.*?)\)", line)
+                if len(result) > 0:
+                    instances["clearnet"].append(result[0])
 
-            public = re.findall(r"## Tor((?:\n|.*)+?)##", raw_data)
-            if public:
-                for line in public[0].split("\n"):
-                    result = re.findall(r"^\| <(http.*?)\/?>", line)
-                    if len(result) > 0:
-                        instances["tor"].append(result[0])
+        public = re.findall(r"## Tor((?:\n|.*)+?)##", raw_data)
+        if public:
+            for line in public[0].split("\n"):
+                result = re.findall(r"^\| <(http.*?)\/?>", line)
+                if len(result) > 0:
+                    instances["tor"].append(result[0])
 
-            public = re.findall(r"## I2P((?:\n|.*)+?)##", raw_data)
-            if public:
-                for line in public[0].split("\n"):
-                    result = re.findall(r"^- <(http.*?)\/?>", line)
-                    if len(result) > 0:
-                        instances["i2p"].append(result[0])
+        public = re.findall(r"## I2P((?:\n|.*)+?)##", raw_data)
+        if public:
+            for line in public[0].split("\n"):
+                result = re.findall(r"^- <(http.*?)\/?>", line)
+                if len(result) > 0:
+                    instances["i2p"].append(result[0])
 
-            public = re.findall(r"## Lokinet((?:\n|.*)+?)##", raw_data)
-            if public:
-                for line in public[0].split("\n"):
-                    result = re.findall(r"^- <(http.*?)\/?>", line)
-                    if len(result) > 0:
-                        instances["loki"].append(result[0])
+        public = re.findall(r"## Lokinet((?:\n|.*)+?)##", raw_data)
+        if public:
+            for line in public[0].split("\n"):
+                result = re.findall(r"^- <(http.*?)\/?>", line)
+                if len(result) > 0:
+                    instances["loki"].append(result[0])
 
-            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
-        except Exception:
-            fetch_cache(cls.frontend, instances)
-            logging.error(traceback.format_exc())
         return instances
 
 
@@ -224,17 +200,12 @@ class SkunkyArt(InstanceFetcher):
     @classmethod
     def fetch(cls) -> dict[str, Any]:
         instances = {"clearnet": [], "tor": [], "i2p": [], "loki": []}
-        try:
-            raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
-            clearnet = []
-            for item in raw_data["instances"]:
-                if "clearnet" in item["urls"]:
-                    clearnet.append(item["urls"]["clearnet"])
-            instances["clearnet"] = clearnet
-            print(Fore.GREEN + "Fetched " + Style.RESET_ALL + cls.frontend)
-        except Exception:
-            fetch_cache(cls.frontend, instances)
-            logging.error(traceback.format_exc())
+        raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
+        clearnet = []
+        for item in raw_data["instances"]:
+            if "clearnet" in item["urls"]:
+                clearnet.append(item["urls"]["clearnet"])
+        instances["clearnet"] = clearnet
         return instances
 
 

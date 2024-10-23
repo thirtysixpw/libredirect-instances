@@ -12,7 +12,7 @@ from .services.utils import (
 
 
 def main() -> None:
-    instances = {fetcher.frontend: fetcher.fetch() for fetcher in INSTANCE_FETCHERS}
+    instances = {fetcher.frontend: fetcher.get_instances() for fetcher in INSTANCE_FETCHERS}
 
     instances = filter_trailing_slash(instances)
     instances = idna_encode(instances)
