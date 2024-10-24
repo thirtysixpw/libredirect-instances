@@ -1,36 +1,29 @@
-from .base import InstanceFetcher
+from .base import FixedInstanceFetcher
 
 
-class OSM(InstanceFetcher):
+class OSM(FixedInstanceFetcher):
     frontend = "osm"
-    is_fixed = True
 
 
-class Neuters(InstanceFetcher):
+class Neuters(FixedInstanceFetcher):
     frontend = "neuters"
-    is_fixed = True
 
 
-class Wikiless(InstanceFetcher):
+class Wikiless(FixedInstanceFetcher):
     frontend = "wikiless"
-    is_fixed = True
 
 
-class MikuInvidious(InstanceFetcher):
+class MikuInvidious(FixedInstanceFetcher):
     frontend = "mikuInvidious"
-    is_fixed = True
 
 
-class Twineo(InstanceFetcher):
+class Twineo(FixedInstanceFetcher):
     frontend = "twineo"
-    is_fixed = True
 
 
-class CloudTube(InstanceFetcher):
+class CloudTube(FixedInstanceFetcher):
     frontend = "cloudtube"
-    is_fixed = True
 
 
-class SimplyTranslate(InstanceFetcher):
+class SimplyTranslate(FixedInstanceFetcher):
     frontend = "simplyTranslate"
-    is_fixed = True
