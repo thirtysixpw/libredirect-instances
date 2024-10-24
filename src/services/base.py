@@ -1,12 +1,11 @@
 import json
 import re
-from pathlib import Path
 from typing import Any
 
 import requests
 from colorama import Fore, Style
 
-from ..constants import DATA_FILE, I2P_REGEX, LOKI_REGEX, NETWORKS, TIMEOUT, TOR_REGEX
+from ..constants import DATA_FILE, I2P_REGEX, LOKI_REGEX, NETWORKS, ROOT_DIR, TIMEOUT, TOR_REGEX
 
 
 class InstanceFetcher:
@@ -15,7 +14,6 @@ class InstanceFetcher:
     regex: str | re.Pattern[str] | None = None
     keys: list[str] | None = None
     network_mapping: dict[str, str] | None = None
-    is_fixed: bool = False
 
     @classmethod
     def _parse_instance_url(cls, instances: dict[str, Any], url: str) -> None:
@@ -37,9 +35,6 @@ class InstanceFetcher:
             raw_data = requests.get(cls.url, timeout=TIMEOUT).text
             for url in re.findall(cls.regex, raw_data):
                 cls._parse_instance_url(instances, url)
-        elif cls.is_fixed:
-            raw_data = Path(f"fixed/{cls.frontend}.json").read_text()
-            instances = json.loads(raw_data)
         else:
             raw_data = requests.get(cls.url, timeout=TIMEOUT).json()
             if cls.keys is not None:
@@ -82,3 +77,10 @@ class InstanceFetcher:
             except (UnicodeDecodeError, KeyError):
                 print(f"{Fore.RED}Failed{Style.RESET_ALL} to get cached {cls.__name__}")
                 return {network: [] for network in NETWORKS}
+
+
+class FixedInstanceFetcher(InstanceFetcher):
+    @classmethod
+    def fetch(cls) -> dict[str, Any]:
+        raw_data = (ROOT_DIR / "fixed" / f"{cls.frontend}.json").read_text()
+        return json.loads(raw_data)
