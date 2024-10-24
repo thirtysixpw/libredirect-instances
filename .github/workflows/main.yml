@@ -46,8 +46,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
 
-      - name: "Mirror changes to Codeberg"
-        shell: bash
+      - name: "Push changes to Codeberg"
+        if: env.CODEBERG_TOKEN
         env:
           CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
         run: |
