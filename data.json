@@ -206,7 +206,8 @@
     "clearnet": [
       "https://inv.nadeko.net",
       "https://invidious.jing.rocks",
-      "https://invidious.nerdvpn.de"
+      "https://invidious.nerdvpn.de",
+      "https://yewtu.be"
     ],
     "tor": [
       "http://inv.nadekonw7plitnjuawu6ytjsl7jlglk2t6pyq6eftptmiv3dvqndwvyd.onion"
@@ -313,7 +314,6 @@
       "https://lr.vern.cc",
       "https://reddit.rtrace.io",
       "https://l.opnxng.com",
-      "https://libreddit.projectsegfau.lt",
       "https://libreddit.bus-hit.me",
       "https://snoo.habedieeh.re"
     ],
@@ -353,7 +353,8 @@
       "https://libremdb.hyperreal.coffee",
       "https://ld.ca.zorby.top",
       "https://imdb.nerdvpn.de",
-      "https://libremdb.canine.tools"
+      "https://libremdb.canine.tools",
+      "https://libremdb-fly.fly.dev"
     ],
     "tor": [
       "http://ld.vernccvbvyi5qhfzyqengccj7lkove6bjot2xhh5kajhwvidqafczrad.onion",
@@ -525,6 +526,7 @@
       "https://piped.video",
       "https://piped.smnz.de",
       "https://piped.adminforge.de",
+      "https://vern.cc",
       "https://piped.drgns.space",
       "https://nyc1.pi.ggtyler.dev",
       "https://piped.ducks.party",
@@ -724,18 +726,13 @@
       "https://redlib.freedit.eu",
       "https://redlib.perennialte.ch",
       "https://rl.bloat.cat",
-      "https://redlib.nohost.network",
       "https://redlib.ducks.party",
       "https://red.ngn.tf",
       "https://red.artemislena.eu",
-      "https://r.darrennathanael.com",
       "https://redlib.privacyredirect.com",
-      "https://redlib.seasi.dev",
       "https://reddit.nerdvpn.de",
       "https://redlib.nadeko.net",
       "https://redlib.private.coffee",
-      "https://red.arancia.click",
-      "https://redlib.reallyaweso.me",
       "https://redlib.privacy.com.de"
     ],
     "tor": [
@@ -860,6 +857,7 @@
   "searxng": {
     "clearnet": [
       "https://baresearch.org",
+      "https://copp.gg",
       "https://darmarit.org/searx",
       "https://etsi.me",
       "https://fairsuch.net",
@@ -891,6 +889,7 @@
       "https://search.nerdvpn.de",
       "https://search.nordh.tech",
       "https://search.ononoki.org",
+      "https://search.plogi.xyz",
       "https://search.privacyredirect.com",
       "https://search.projectsegfau.lt",
       "https://search.rhscz.eu",
@@ -899,6 +898,7 @@
       "https://search.tommy-tran.com",
       "https://searx.ankha.ac",
       "https://searx.be",
+      "https://searx.cespedes.fr",
       "https://searx.colbster937.dev",
       "https://searx.dresden.network",
       "https://searx.electroncash.de",
@@ -934,7 +934,6 @@
     ],
     "tor": [
       "http://lbmegc3rjnekmdxuisynqdc7y3m2tgyq7gj257ooddaobxqjw36bdayd.onion",
-      "http://kantanrucloofzrfn7vqlsxbhipkqv55qygn4oxogbnjpfex54bw4gad.onion",
       "http://4n53nafyi77iplnbrpmxnp3x4exbswwxigujaxy3b37fvr7bvlopxeyd.onion",
       "http://whereissky27lxfdrs7ct7a5ievor3tl67qi77rv5luga7wod5jf2mad.onion",
       "http://searchpie7fejn4wctzm6fgm6oz5vnziltfzzuec6b4qmkr3wrqaoqqd.onion",
