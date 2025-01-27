@@ -309,7 +309,9 @@
     "clearnet": [
       "https://safereddit.com",
       "https://libreddit.kavin.rocks",
+      "https://lr.vern.cc",
       "https://reddit.rtrace.io",
+      "https://l.opnxng.com",
       "https://discuss.whatever.social",
       "https://snoo.habedieeh.re"
     ],
@@ -513,12 +515,13 @@
   },
   "piped": {
     "clearnet": [
-      "http://ww25.yapi.vyper.me/?subid1=20250127-0926-2175-acdd-54928fb40cd8",
+      "http://ww25.yapi.vyper.me/?subid1=20250128-0928-2700-a497-1e15aa070d5b",
       "https://piped.nosebs.ru",
       "https://vern.cc",
       "https://piped.yt",
       "https://piped.drgns.space",
       "https://nyc1.pi.ggtyler.dev",
+      "https://piped.ducks.party",
       "https://piped.private.coffee"
     ],
     "tor": [],
@@ -562,7 +565,60 @@
     "loki": []
   },
   "privateBin": {
-    "clearnet": [],
+    "clearnet": [
+      "https://snip.dssr.ch",
+      "https://secrets.l25.cloud",
+      "https://www.vlh.dk/privatebin",
+      "https://secrets.true.nl",
+      "https://bonus01.hwb0307.com",
+      "https://0.anonpaste.org",
+      "https://paste.3server.de",
+      "https://zerobin.thican.net",
+      "https://ots.kocsar.at",
+      "https://p.vinci-concessions.com",
+      "https://paste.hostux.net",
+      "https://pb.flossboxin.org.in",
+      "https://cryptostorm.is/paste",
+      "https://pas.te.it",
+      "https://privatebin.app",
+      "https://paste.tuxcloud.net",
+      "https://p.darklab.sh",
+      "https://paste.worf.win",
+      "https://paste.loryy.dev",
+      "https://pasteb.in",
+      "https://bin.0xfc.de",
+      "https://notebin.de",
+      "https://pb.blackvoid.club",
+      "https://sendpass.ru",
+      "https://privatebin.net",
+      "https://bin.esd.cc",
+      "https://paste.skynetcloud.site",
+      "https://bin.cafeo.re",
+      "https://paste.ononoki.org",
+      "https://notabin.com",
+      "https://0.jaegers.net",
+      "https://privatebin.luckvintage.com",
+      "https://paste.techbag.app",
+      "https://paste.ottertelecom.com",
+      "https://anonpaste.org",
+      "https://privatebin.at",
+      "https://bin.oldgate.org",
+      "https://0day.anonpaste.org",
+      "https://pb.jaska.cc",
+      "https://paste.nerdvpn.de",
+      "https://privatebin.arch-linux.cz",
+      "https://0.0g.gg",
+      "https://privatebin.fedov.net",
+      "https://privatebin.io",
+      "https://encryp.ch/note",
+      "https://paste.tildeverse.org",
+      "https://paste.kyznikov.my.id",
+      "https://paste.coalserver.de",
+      "https://extrait.facil.services",
+      "https://secret.hummel-web.at",
+      "https://privatebin.wsmm.de",
+      "https://onetimesecret.trans-ix.nl"
+    ],
     "tor": [],
     "i2p": [],
     "loki": []
@@ -652,6 +708,7 @@
   "redlib": {
     "clearnet": [
       "https://safereddit.com",
+      "https://l.opnxng.com",
       "https://redlib.catsarch.com",
       "https://redlib.perennialte.ch",
       "https://rl.bloat.cat",
@@ -664,7 +721,9 @@
       "https://redlib.privacyredirect.com",
       "https://reddit.nerdvpn.de",
       "https://redlib.nadeko.net",
-      "https://rl.rootdo.com"
+      "https://rl.rootdo.com",
+      "https://red.arancia.click",
+      "https://redlib.privacy.com.de"
     ],
     "tor": [
       "http://red.lpoaj7z2zkajuhgnlltpeqh3zyq7wk2iyeggqaduhgxhyajtdt2j7wad.onion"
@@ -1032,7 +1091,9 @@
       "https://tl.clovius.club",
       "https://translite.lumaeris.com",
       "https://tl.dc09.ru",
-      "https://tl.maid.zone"
+      "https://tl.maid.zone",
+      "https://translite.deep-swarm.xyz",
+      "http://translite.dswarmsikhttkg7jgsoyfiqpj3ighupfrvuz5ri3lu5q2dlqyrpgk7ad.onion"
     ],
     "tor": [],
     "i2p": [],
